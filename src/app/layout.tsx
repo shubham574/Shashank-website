@@ -2,7 +2,6 @@ import "./globals.css";
 import Nav from "@/components/Nav";
 import { Geist } from "next/font/google";
 import { ViewTransitions} from "next-view-transitions";
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -18,9 +17,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ViewTransitions>
     <html lang="en" className={`${geistSans.variable}`} suppressHydrationWarning>
       <body className="min-h-screen antialiased" >
+          
         <Nav />
         {children}
-      </body>
+        
+              </body>
     </html>
     </ViewTransitions>
   );

@@ -1,57 +1,84 @@
 "use client"
 import React from "react"
 import { motion } from "framer-motion"
-import MaskedDiv from "@/components/ui/masked-div"
+import { Variants } from "framer-motion";
+
+
 import { useRevealer } from "@/hooks/useRevealer"
+import Scroll from "@/components/horizontalScroll";
+import Page2 from "@/components/page2";
+import Page4 from "@/components/page4";
+
+
+
+const textVariants: Variants = {
+  hidden: { y: 40, opacity: 0 },
+  visible: (i: number) => ({
+    y: 0,
+    opacity: 1,
+    transition: {
+      delay: i * 0.2,
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  }),
+};
+
 
 const Page = () => {
-  const revealerDone = useRevealer() // ✅ now boolean
+  const revealerDone = useRevealer() 
 
-  return (
-    <>
-      {/* Revealer overlay */}
-      <div className="revealer fixed inset-0 bg-purple-600 origin-top z-50"></div>
 
-      {/* Render content ONLY after revealer animation */}
-      {revealerDone && (
-        <>
-          {/* Background video */}
-          <MaskedDiv
-            maskType="type-4"
-            size={0.9}
-            className="w-full h-screen absolute top-30 overflow-hidden"
-          >
-            <video autoPlay loop muted className="w-full h-full object-cover">
-              <source src="/video.mp4" type="video/mp4" />
-            </video>
-          </MaskedDiv>
+  const lines = [
+    "Welcome!",
+    "From designers to",
+    "developers, we've",
+    "got you covered.",
+  ];
 
-          {/* Floating CTA Button */}
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
-            <motion.button
-              initial={{ width: 64, borderRadius: 9999 }}
-              whileHover={{ width: 260 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="h-16 flex items-center justify-center overflow-hidden
-                         text-white font-medium shadow-xl 
-                         bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500
-                         bg-[length:200%_200%] animate-gradient-move"
-            >
-              <motion.span
-                initial={{ opacity: 0, x: -10 }}
-                whileHover={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-                className="whitespace-nowrap px-4"
-              >
-                Get free discovery call
-              </motion.span>
-            </motion.button>
-          </div>
-        </>
-      )}
-    </>
-  )
+
+  return (
+    <>
+      {/* Revealer overlay */}
+      <div className="revealer fixed inset-0 bg-purple-600 origin-top z-50"></div>
+
+
+      {/* Render content ONLY after revealer animation */}
+      {revealerDone && (
+        <div>
+      <main className="h-[60vh] flex flex-col bg-white text-black">
+        {/* Header */}
+   
+        <section className="flex flex-col justify-center flex-1 px-12 ml-12">
+          <div className="ml-16">    
+           <div className=" font-mori font-bold text-[4rem] leading-[1.1] tracking-tight ">
+              {lines.map((line, i) => (
+                <motion.div
+                  key={i}
+                  custom={i}
+                  initial="hidden"
+                  animate="visible"
+                  variants={textVariants}
+                >
+                  {line}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+       
+      </main>
+
+           {/* Horizontal Scroll Section */}
+      <Scroll />   
+
+     </div>
+     
+      )}
+      
+    </>
+  )
 }
+
 
 export default Page
