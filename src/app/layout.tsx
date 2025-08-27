@@ -2,6 +2,7 @@ import "./globals.css";
 import Nav from "@/components/Nav";
 import { Geist } from "next/font/google";
 import { ViewTransitions} from "next-view-transitions";
+import LenisProvider from "./lenis-provider";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -17,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ViewTransitions>
     <html lang="en" className={`${geistSans.variable}`} suppressHydrationWarning>
       <body className="min-h-screen antialiased" >
-          
+         <LenisProvider /> 
         <Nav />
         {children}
         

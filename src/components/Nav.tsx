@@ -1,5 +1,4 @@
 "use client"
-
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useTransitionRouter } from "next-view-transitions"
@@ -10,10 +9,35 @@ const Nav = () => {
   const router = useTransitionRouter()
   const pathname = usePathname()
   const [showNav, setShowNav] = useState(false)
+  const [showHellos, setShowHellos] = useState(false)
+  const [showNavItems, setShowNavItems] = useState(false)
+  const [currentHelloIndex, setCurrentHelloIndex] = useState(0)
+
+  // Different "hello" greetings in various languages
+  const hellos = [
+    { text: "Hello", lang: "English" },
+    { text: "Hola", lang: "Spanish" },
+    { text: "Bonjour", lang: "French" },
+    { text: "Ciao", lang: "Italian" }
+  ]
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowNav(true), 500)
-    return () => clearTimeout(timer)
+    // Show hellos immediately when nav appears in circle form
+    const showNavTimer = setTimeout(() => {
+      setShowNav(true)
+      setShowHellos(true)
+    }, 500)
+    
+    // Start transitioning to nav items as the capsule animation begins
+    const showNavItemsTimer = setTimeout(() => {
+      setShowHellos(false)
+      setShowNavItems(true)
+    }, 1800) // Start transition during capsule formation
+    
+    return () => {
+      clearTimeout(showNavTimer)
+      clearTimeout(showNavItemsTimer)
+    }
   }, [])
 
   function triggerPageTransition() {
@@ -68,19 +92,97 @@ const Nav = () => {
             : {}
         }
         transition={{ duration: 2.1, ease: [0.76, 0, 0.24, 1] }}
-        className="fixed z-50 flex items-center justify-center gap-8 
-                   bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 
-                   text-white font-medium shadow-xl"
+        className="fixed z-50 flex items-center justify-center gap-8
+                   bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500
+                   text-white font-medium shadow-xl overflow-hidden"
       >
-        <Link href="/" onClick={handleNavigation("/")}>
-          Home
-        </Link>
-        <Link href="/work" onClick={handleNavigation("/work")}>
-          Work
-        </Link>
-        <Link href="/studio" onClick={handleNavigation("/studio")}>
-          Studio
-        </Link>
+        {/* Hello animations - cycle through languages in circle form */}
+        <AnimatePresence mode="wait">
+          {showHellos && !showNavItems && (
+            <motion.div
+              className="absolute inset-0 flex items-center justify-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentHelloIndex}
+                  initial={{ 
+                    opacity: 0, 
+                    scale: 0.7,
+                    rotateY: 90
+                  }}
+                  animate={{ 
+                    opacity: 1,
+                    scale: 1,
+                    rotateY: 0
+                  }}
+                  exit={{ 
+                    opacity: 0, 
+                    scale: 0.7,
+                    rotateY: -90
+                  }}
+                  transition={{
+                    duration: 0.4,
+                    ease: [0.76, 0, 0.24, 1]
+                  }}
+                  className="text-white font-medium text-lg"
+                >
+                  {hellos[currentHelloIndex].text}
+                </motion.div>
+              </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Navigation items */}
+        <AnimatePresence>
+          {showNavItems && (
+            <div className="flex items-center justify-center gap-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0 }}
+              >
+                <Link href="/" onClick={handleNavigation("/")}>
+                  Home
+                </Link>
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+              >
+                <Link href="/work" onClick={handleNavigation("/work")}>
+                  Case Studies
+                </Link>
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <Link href="/studio" onClick={handleNavigation("/studio")}>
+                  Contact Me
+                </Link>
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                <Link href="/testimonial" onClick={handleNavigation("/testimonial")}>
+                  Testimonial
+                </Link>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </motion.nav>
     </AnimatePresence>
   )

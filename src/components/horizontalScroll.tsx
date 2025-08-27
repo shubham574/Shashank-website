@@ -3,6 +3,12 @@ import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CardDemo from "./cards-demo-1";
+import localFont from "next/font/local";
+
+
+const moriSemibold = localFont({
+  src: "../../public/fonts/Mori-Semibold.otf"
+})
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,21 +23,14 @@ export default function Scroll() {
 
     const reduce =
       typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
 
-    // ✅ Dynamic scroll width calculation
+    // ✅ Correct distance: content width - viewport width
     const getTotalWidth = () => {
-      const children = Array.from(cardWrapper.children) as HTMLElement[];
-      if (children.length === 0) return 0;
-
-      const last = children[children.length - 1];
       const totalWidth = cardWrapper.scrollWidth;
-
-      // Extra distance so last card fully enters the viewport
-      const extra = Math.max(0, window.innerWidth - last.offsetWidth);
-
-      return Math.max(0, totalWidth - window.innerWidth + extra);
+      return Math.max(0, totalWidth - window.innerWidth);
     };
 
     const ctx = gsap.context(() => {
@@ -40,11 +39,10 @@ export default function Scroll() {
         ease: "none",
         scrollTrigger: {
           trigger: section,
-          start: "top 20%", // pin when section hits top
-          end: () => "+=" + getTotalWidth(),
           pin: true,
           scrub: 1,
-          markers: true, // ❌ remove in production
+          start: "top 16%",
+          end: () => "+=" + getTotalWidth(),
           invalidateOnRefresh: true,
           anticipatePin: 1,
         },
@@ -52,7 +50,7 @@ export default function Scroll() {
 
       const onResize = () => tween.scrollTrigger?.refresh();
       window.addEventListener("resize", onResize);
-      setTimeout(() => ScrollTrigger.refresh(), 0); // refresh after images load
+      ScrollTrigger.refresh();
 
       return () => {
         window.removeEventListener("resize", onResize);
@@ -65,7 +63,8 @@ export default function Scroll() {
   }, []);
 
   return (
-    <main className="w-full">
+    <main className="w-full bg-white">
+      {/* Horizontal Scroll Section */}
       <section
         ref={sectionRef}
         className="relative h-[70vh] bg-gray-100 overflow-hidden"
@@ -77,7 +76,7 @@ export default function Scroll() {
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div
               key={i}
-              className="min-w-[65vw] h-[70vh] flex items-center justify-center"
+              className={`min-w-[65vw] h-[70vh] flex items-center justify-center ${moriSemibold.className}`}
             >
               <CardDemo
                 image="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=1600"

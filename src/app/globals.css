@@ -1,37 +1,17 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@font-face {
-  font-family: 'Anzo';
-  src: url(/file.woff2) format("woff2");
-
-}
-.font-anzo {
-  font-family: 'Anzo' ;
-}
-/* src/app/global.css */
-
-@font-face {
-  font-family: 'Mori-Regular'; 
-  src: url(/Mori-Regular.woff2) format("woff2");
-}
-
-.font-mori {
-  font-family: 'Mori-Regular', sans-serif;
-}
-@font-face {
-  font-family: 'Mori-SemiBold'; 
-  src: url(/Mori-Semibold.woff2) format("woff2");
-}
-
-.font-mori-semibold {
-  font-family: 'Mori-SemiBold', sans-serif;
-}
-
 
 :root {
   --bg: #fff;
   --fg: #0a0a0a;
+}
+@media (prefers-reduced-motion: reduce) {
+  html, body, * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 * {
@@ -156,4 +136,24 @@ body {
 .animate-gradient-move {
   animation: gradient-move 4s ease infinite;
 }
+
+@theme inline {
+  --animate-scroll: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
+
+  @keyframes scroll {
+    to {
+      transform: translate(calc(-50% - 0.5rem));
+    }
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { transform: scale(1); opacity: 0.1; }
+  50% { transform: scale(1.05); opacity: 0.2; }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 6s ease-in-out infinite;
+}
+
+
 

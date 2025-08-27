@@ -8,14 +8,20 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      animation: {
-        "pulse-slow": "pulse 3s infinite", // your custom slow pulse
+       colors: {
+        brandRed: "#cf2f23", // tweak to match your red
       },
-      
+       borderRadius: {
+        card: "22px",
+      },
+      animation: {
+        "pulse-slow": "pulse 3s infinite",
+      },
+      },
     },
-  },
+  
   plugins: [
-    require("tw-animate-css"), // animation plugin
+    require("tw-animate-css"), // optional if you use animate.css
   ],
 };
 
