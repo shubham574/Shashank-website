@@ -1,6 +1,6 @@
 "use client"
 
-import { useGSAP } from "@gsap/react"
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap"
 import CustomEase from "gsap/CustomEase"
 import { useState } from "react"
@@ -19,7 +19,7 @@ export function useRevealer(): boolean {
       ease: "hop",
       onComplete: () => setDone(true), // ✅ mark finished
     })
-  }, {})
+  }, [])
 
   return done
 }
